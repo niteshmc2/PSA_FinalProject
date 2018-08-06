@@ -11,7 +11,7 @@ import java.util.Arrays;
 import javax.imageio.ImageIO;
 
 public class NeuralNet {
-	private double[] inputs;
+	private double[][] inputs;
 	private Layer hidden1;
 	private Layer hidden2;
 	private Layer outputL;
@@ -23,7 +23,9 @@ public class NeuralNet {
 		outputL = new Layer(100,no_of_outputs); 
 	}
 	
-	
+	public void train(int[] input_img, int[] target_cls){
+		inputs = Matrix.fromArray(input_img)
+	}
 	
 	public static void main(String[] args) throws IOException {	
 		File file = new File("data_batch_1.bin");

@@ -7,10 +7,12 @@ public class Layer {
 	private ArrayList<Neuron> neurons;
 
 	private double[][] weights;
+	private double[][] bias; 
 		
 	public Layer(int no_of_inputs, int no_of_neurons) {
 		weights = Matrix.random(no_of_neurons,no_of_inputs);
 		initNeurons(no_of_neurons);
+		initBias(no_of_neurons);
 	}
 	
 	private void initNeurons(int no_of_neurons) {
@@ -19,6 +21,10 @@ public class Layer {
 			Neuron n = new Neuron();
 			neurons.add(n);
 		}
+	}
+	
+	private void initBias(int no_of_neurons){
+		bias = Matrix.random(no_of_neurons, 1);
 	}
 	
 	public double[][] computeOutput(double[][] input){
