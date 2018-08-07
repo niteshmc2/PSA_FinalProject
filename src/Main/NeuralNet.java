@@ -15,7 +15,7 @@ public class NeuralNet {
 	private Layer hidden1;
 	private Layer hidden2;
 	private Layer outputL;
-	
+	private static Data data;
 	public NeuralNet(int no_of_inputs, int no_of_outputs) {
 		//this.inputs = inputs;
 		hidden1 = new Layer(no_of_inputs,300);
@@ -23,11 +23,20 @@ public class NeuralNet {
 		outputL = new Layer(100,no_of_outputs); 
 	}
 	
-	public void train(int[] input_img, int[] target_cls){
-		inputs = Matrix.fromArray(input_img)
+	public Layer getHidden1() {
+		return hidden1;
 	}
-	
-	public static void main(String[] args) throws IOException {	
+
+	public Layer getHidden2() {
+		return hidden2;
+	}
+
+	public Layer getOutputL() {
+		return outputL;
+	}
+
+	public static Data readImage() throws IOException{
+		Data data = new Data();
 		File file = new File("data_batch_1.bin");
 		//FileReader fr = new FileReader(f);
 		InputStream insputStream = new FileInputStream(file);
@@ -41,30 +50,58 @@ public class NeuralNet {
 		System.out.println(clas);
 		System.out.println(bytes[0]);
         File f = new File("MyFile.png");
-        int[][] images = new int[10000][1025];
-        int[] img = new int[1025];
-        int cls = Arrays.copyOfRange(bytes,0, 2)[0];
-        byte[] reds = Arrays.copyOfRange(bytes, 1, 1025);
-        byte[] greens = Arrays.copyOfRange(bytes, 1025, 2050);
-        byte[] blues = Arrays.copyOfRange(bytes, 2050, 3074);
-        for(int x = 0; x < 10000; x++) {
-        	
-        	for(int y = 0; y < img.length - 1; y++){
-        		int r = reds[y] & 0xFF;
-        		//System.out.println(r);
-                int g = greens[y] & 0xFF; 
-                int b = blues[y] & 0xFF;
-                int col = (r << 16) | (g << 8) | b ;
-                images[x][y] = col;
-                
+        
+        
+        for(int x = 0; x < 30730000; x += 3073) {
+        	int[] img = new int[1024];
+        		int cls = bytes[x];
+    	        byte[] reds = Arrays.copyOfRange(bytes, x+1, x+1025);
+    	        byte[] greens = Arrays.copyOfRange(bytes, x+1025, x+2049);
+    	        byte[] blues = Arrays.copyOfRange(bytes, x+2049, x+3073);
+    	        
+            	for(int z = 0; z < img.length; z++){
+            		int r = reds[z] & 0xFF;
+            		//System.out.println(r);
+                    int g = greens[z] & 0xFF; 
+                    int b = blues[z] & 0xFF;
+                    int col = (r << 16) | (g << 8) | b ;
+                    img[z] = col;
         	}
-        	images[x][1024] = cls;
+	      
+        	Images imgs = new Images(img, cls);
+        	data.addImage(imgs);
         	
         }
-        	
+        
+//        for(int i=20; i<30; i++){
+//        	data.getData().get(i).writeImg(String.valueOf(i));
+//        }
         System.out.println("Done");
-            //ImageIO.write(img, "PNG", f);
-		//NeuralNet net = new NeuralNet(data, 10);
+        
+        return data;
 		
 	}
+	
+	
+	public void train(int[] input_img, int target_cls){
+		inputs = Matrix.fromArray(input_img);
+		double[][] targets = Matrix.clsToArray(target_cls);
+		
+		double[][] h1outputs = hidden1.computeOutput(inputs);
+		double[][] h2outputs = hidden2.computeOutput(h1outputs);
+		double[][] outOutputs = outputL.computeOutput(h2outputs);
+		
+		double[][] outErrors = Matrix.subtract(targets, outOutputs);
+		
+	}
+	
+	public static void main(String[] args) throws IOException{
+		data = readImage();
+		NeuralNet net = new NeuralNet(data.getData().get(0).getImage().length, 10);
+		for(int i = 0; i < data.getData().size(); i++){
+			net.train(data.getData().get(i).getImage(), data.getData().get(i).getCls());
+			
+		}
+	}
+		
 }

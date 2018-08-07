@@ -110,6 +110,16 @@ public class Matrix {
                 a[i][j] = arr[i];
         return a; 
       }
+    static double[][] fromArray(double[] arr) {
+        int m = arr.length;
+        int n = 1;
+        double[][] a = new double[m][n];
+        for (int i = 0; i < m; i++)
+            for (int j = 0; j < n; j++)
+                a[i][j] = arr[i];
+        return a; 
+      }
+
 
     static double[][] clsToArray(int x){
     	int m = 10;
