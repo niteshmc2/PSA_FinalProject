@@ -27,16 +27,29 @@ public class Layer {
 		bias = Matrix.random(no_of_neurons, 1);
 	}
 	
+	
+	
 	public double[][] computeOutput(double[][] input){
 		double[][] product = Matrix.multiply(weights, input);
 		for(int i = 0; i < product.length; i++) {
 			for(int j = 0; j < product[0].length; j++) {
-				product[i][j]= 1/(1+Math.exp(-product[i][j]));
+				product[i][j]= 1/(1+Math.pow(Math.E, -1*product[i][j]));
 			}
 		}
 		return product;
 	}
 	
+	
+	
+	
+	public double[][] getBias() {
+		return bias;
+	}
+
+	public void setBias(double[][] bias) {
+		this.bias = bias;
+	}
+
 	public double[][] getWeights() {
 		return weights;
 	}

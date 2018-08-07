@@ -120,18 +120,55 @@ public class Matrix {
         return a; 
       }
 
+    static double[][] elemMultiply(double[][] a, double[][] b){
+    	int m = a.length;
+        int n = a[0].length;
+        double[][] c = new double[m][n];
+        for (int i = 0; i < m; i++)
+            for (int j = 0; j < n; j++)
+                c[i][j] = a[i][j] * b[i][j];
+        return c;
+    }
+    
+    static double[][] scalarMultiply(double[][] a, double b){
+    	int m = a.length;
+        int n = a[0].length;
+        double[][] c = new double[m][n];
+        for (int i = 0; i < m; i++) {
+        	for (int j = 0; j < n; j++) {
+        		c[i][j] = a[i][j] * b;	
+        	}
+        }
+        return c;
+    }
 
     static double[][] clsToArray(int x){
     	int m = 10;
     	int n = 1;
     	double[][] a = new double[m][n];
-        for (int i = 0; i < m; i++)
-            for (int j = 0; j < n; j++)
-            	if(i == x - 1)
+        for (int i = 0; i < m; i++) {
+        	for (int j = 0; j < n; j++) {
+        		if(i == x - 1)
             		a[i][j] = 1;
             	else
             		a[i][j] = 0;
+        	}
+        }
+            
         return a; 
+    }
+    
+    static int arraytoCls(double[][] a){
+    	int m = 10;
+    	int n = 1;
+    	//double[][] a = new double[m][n];
+        for (int i = 0; i < m; i++) {
+        	for (int j = 0; j < n; j++) {
+        		if(a[i][j] == 1)
+            		return 1;
+        	}
+        }
+        return -1;
     }
 }
 
