@@ -93,9 +93,19 @@ public class NeuralNet {
 		return input;
 	}
 	
+	private double[][] normalize(double[][] a){
+		int m = a.length;
+        int n = a[0].length;
+        double[][] c = new double[m][n];
+        for (int i = 0; i < m; i++)
+            for (int j = 0; j < n; j++)
+                c[i][j] = a[i][j]/16777215-0.5;
+        return c;
+	}
 	
 	public void train(int[] input_img, int target_cls){
 		double[][] inputs = Matrix.fromArray(input_img);
+		inputs = normalize(inputs);
 		double[][] targets = Matrix.clsToArray(target_cls);
 		//Compute output
 		double[][] h1outputs = hidden1.computeOutput(inputs);
@@ -158,6 +168,7 @@ public class NeuralNet {
 	
 	public double[][] test(int[] input_img, int target_cls) {
 		double[][] inputs = Matrix.fromArray(input_img);
+		inputs = normalize(inputs);
 		//double[][] targets = Matrix.clsToArray(target_cls);
 		//Compute output
 		double[][] h1outputs = hidden1.computeOutput(inputs);
@@ -166,21 +177,41 @@ public class NeuralNet {
 		return outOutputs;
 	}
 	
-	public static void main(String[] args) throws IOException{
-		Data data = readImage("data_batch_1.bin");
-		NeuralNet net = new NeuralNet(data.getData().get(0).getImage().length, 10);
+	public void trainMult(NeuralNet net, Data data) {
 		for(int i = 0; i < data.getData().size(); i++){
 			net.train(data.getData().get(i).getImage(), data.getData().get(i).getCls());	
 		}
+	}
+	
+	public static void main(String[] args) throws IOException{
+		Data data1 = readImage("data_batch_1.bin");
+		Data data2 = readImage("data_batch_2.bin");
+		Data data3 = readImage("data_batch_3.bin");
+		Data data4 = readImage("data_batch_4.bin");
+		Data data5 = readImage("data_batch_5.bin");
+		
+		NeuralNet net = new NeuralNet(data1.getData().get(0).getImage().length, 10);
+		
+		net.trainMult(net, data1);
+		net.trainMult(net, data2);
+		net.trainMult(net, data3);
+		net.trainMult(net, data4);
+		net.trainMult(net, data5);
 		
 		Data test = readImage("test_batch.bin");
-		for(int i = 0; i < test.getData().size(); i+=1000){
+		for(int i = 5; i < test.getData().size(); i+=1000){
 			double[][] outOutputs = net.test(test.getData().get(i).getImage(), test.getData().get(i).getCls());	
 			String result="";
+			int gusOutCls=1;
+			double gusOut = outOutputs[0][0];
 			for(int j=0; j<outOutputs.length; j++) {
+				if(gusOut < outOutputs[j][0]) {
+					gusOut = outOutputs[j][0];
+					gusOutCls = j+1;
+				}
 				result+="Class-"+(j+1)+":"+(Math.round(outOutputs[j][0]*100)/100.00)+" | ";
 			}
-			System.out.println("Expected:"+(test.getData().get(i).getCls()+1)+" -- Guessed:"+result);
+			System.out.println("Expected:"+(test.getData().get(i).getCls()+1)+" -- Guessed:"+gusOutCls+" Array:"+result);
 		}
 	}
 		

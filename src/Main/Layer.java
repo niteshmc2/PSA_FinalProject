@@ -31,6 +31,7 @@ public class Layer {
 	
 	public double[][] computeOutput(double[][] input){
 		double[][] product = Matrix.multiply(weights, input);
+		product = Matrix.add(product, bias);
 		for(int i = 0; i < product.length; i++) {
 			for(int j = 0; j < product[0].length; j++) {
 				product[i][j]= 1/(1+Math.pow(Math.E, -1*product[i][j]));
