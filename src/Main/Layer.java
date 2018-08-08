@@ -24,7 +24,7 @@ public class Layer {
 	}
 	
 	private void initBias(int no_of_neurons){
-		bias = Matrix.random(no_of_neurons, 1);
+		bias = Matrix.generateByNum(no_of_neurons, 1, 1);
 	}
 	
 	

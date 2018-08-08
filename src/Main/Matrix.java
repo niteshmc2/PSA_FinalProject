@@ -7,7 +7,7 @@ public class Matrix {
         double[][] a = new double[m][n];
         for (int i = 0; i < m; i++)
             for (int j = 0; j < n; j++)
-                a[i][j] = Math.random();
+                a[i][j] = Math.random()-0.5;
         return a;
     }
 
@@ -120,6 +120,14 @@ public class Matrix {
         return a; 
       }
 
+    static double[][] generateByNum(int m, int n, int x){
+    	double[][] a = new double[m][n];
+        for (int i = 0; i < m; i++)
+            for (int j = 0; j < n; j++)
+                a[i][j] = x;
+        return a;
+    }
+    
     static double[][] elemMultiply(double[][] a, double[][] b){
     	int m = a.length;
         int n = a[0].length;
@@ -148,7 +156,7 @@ public class Matrix {
     	double[][] a = new double[m][n];
         for (int i = 0; i < m; i++) {
         	for (int j = 0; j < n; j++) {
-        		if(i == x - 1)
+        		if(i == x)
             		a[i][j] = 1;
             	else
             		a[i][j] = 0;

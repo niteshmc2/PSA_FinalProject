@@ -2,9 +2,4 @@
 /.settings
 *.classpath
 *.project
-data_batch_1.bin
-test_batch.bin
-data_batch_2.bin
-data_batch_3.bin
-data_batch_4.bin
-data_batch_5.bin
+train.csv

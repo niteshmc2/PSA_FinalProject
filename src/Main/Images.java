@@ -31,14 +31,14 @@ public class Images {
 		BufferedImage img = new BufferedImage(32, 32, BufferedImage.TYPE_INT_RGB );
 		File f = new File(fileName+".png");
 		System.out.println(getCls());
-		for(int x = 0; x < 32; x++){
-		                for(int y = 0; y < 32; y++){
+		for(int x = 0; x < 28; x++){
+		                for(int y = 0; y < 28; y++){
 //		                		int r = reds[y+x*32] & 0xFF;
 //		                		//System.out.println(r);
 //		                        int g = greens[y+x*32] & 0xFF; 
 //		                        int b = blues[y+x*32] & 0xFF;
 //		                        int col = (r << 16) | (g << 8) | b;
-		                    int col = image[y+x*32];    
+		                    int col = image[y+x*28];    
 		                	img.setRGB(y, x, col);
 		                }
 		            }
