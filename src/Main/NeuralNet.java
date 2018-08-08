@@ -1,10 +1,12 @@
 package Main;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -189,7 +191,7 @@ public class NeuralNet {
 	}
 	
 	public static Data readCSV() throws IOException {
-		String csvFile = "train.csv";
+		String csvFile = "data.csv";
         BufferedReader br = null;
         String line = "";
         String cvsSplitBy = ",";
@@ -212,25 +214,19 @@ public class NeuralNet {
 		return data;
 	}
 	
+	
+	
 	public static void main(String[] args) throws IOException{
-//		Data data1 = readImage("data_batch_1.bin");
-//		Data data2 = readImage("data_batch_2.bin");
-//		Data data3 = readImage("data_batch_3.bin");
-//		Data data4 = readImage("data_batch_4.bin");
-//		Data data5 = readImage("data_batch_5.bin");
+		double[][] conMatrix = Matrix.generateByNum(10, 10, 0);
+
 		Data data = readCSV();
-		data.getData().get(20).writeImg("newTest.png");
+
 		NeuralNet net = new NeuralNet(data.getData().get(0).getImage().length, 10);
 		
-//		net.trainMult(net, data1);
-//		net.trainMult(net, data2);
-//		net.trainMult(net, data3);
-//		net.trainMult(net, data4);
-//		net.trainMult(net, data5);
+
 		net.trainMult(net, data, 38000);
 		
-		//Data test = readImage("train.csv");
-		for(int i = 38341; i < data.getData().size(); i+=500){
+		for(int i = 38000; i < data.getData().size(); i++){
 			double[][] outOutputs = net.test(data.getData().get(i).getImage(), data.getData().get(i).getCls());	
 			String result="";
 			int gusOutCls=0;
@@ -243,7 +239,22 @@ public class NeuralNet {
 				result+="Class-"+(j)+":"+(Math.round(outOutputs[j][0]*100)/100.00)+" | ";
 			}
 			System.out.println("Expected:"+(data.getData().get(i).getCls())+" -- Guessed:"+gusOutCls+" Array:"+result);
+			conMatrix[data.getData().get(i).getCls()][gusOutCls]++;
 		}
+		
+		BufferedWriter writer;
+        File f = new File("confusionMatrix.csv");
+        writer = new BufferedWriter(new FileWriter(f));
+        writer.append("0,1,2,3,4,5,6,7,8,9");
+        writer.append("\n");
+        for(int i = 0; i < 10; i++){
+        	String cm = "";
+        	for(int j = 0; j < 10; j++){
+        		cm += String.valueOf(conMatrix[i][j]) + ",";
+        	}
+        	writer.append(cm + "\n");
+        }
+		writer.close();
 	}
 		
 }
