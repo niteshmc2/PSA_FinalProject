@@ -3,3 +3,4 @@
 *.classpath
 *.project
 train.csv
+.DS_Store
