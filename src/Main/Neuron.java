@@ -1,25 +1,17 @@
 package Main;
 
 public class Neuron {
-	private double[] inputs;
-	private float[] weights;
+	private double[] weights;
 	private float output;
 	
-	public Neuron(double[] inputs, float[] weights) {
-		super();
-		this.inputs = inputs;
+	public Neuron(double[] weights) {
 		this.weights = weights;
 	}
-	public double[] getInputs() {
-		return inputs;
-	}
-	public void setInputs(double[] inputs) {
-		this.inputs = inputs;
-	}
-	public float[] getWeights() {
+	
+	public double[] getWeights() {
 		return weights;
 	}
-	public void setWeights(float[] weights) {
+	public void setWeights(double[] weights) {
 		this.weights = weights;
 	}
 	public float getOutput() {

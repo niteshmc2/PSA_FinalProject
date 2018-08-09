@@ -11,14 +11,15 @@ public class Layer {
 		
 	public Layer(int no_of_inputs, int no_of_neurons) {
 		weights = Matrix.random(no_of_neurons,no_of_inputs);
-		initNeurons(no_of_neurons);
+		initNeurons(no_of_neurons, no_of_inputs);
 		initBias(no_of_neurons);
 	}
 	
-	private void initNeurons(int no_of_neurons) {
+	private void initNeurons(int no_of_neurons, int no_of_inputs) {
 		neurons = new ArrayList<>();
+		double[][] weights_T = Matrix.transpose(weights);
 		for(int i=0; i<=no_of_neurons; i++) {
-			Neuron n = new Neuron();
+			Neuron n = new Neuron(weights_T[i]);
 			neurons.add(n);
 		}
 	}
