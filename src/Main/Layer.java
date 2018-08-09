@@ -29,7 +29,7 @@ public class Layer {
 	
 	
 	
-	public double[][] computeOutput(double[][] input){
+	public double[][] computeOutput(double[][] input, double[][] weights){
 		double[][] product = Matrix.multiply(weights, input);
 		product = Matrix.add(product, bias);
 		for(int i = 0; i < product.length; i++) {

@@ -87,7 +87,7 @@ public class NeuralNet {
 		
 	}
 	
-	private double[][] computeDfuncOutput(double[][] input) {
+	public double[][] computeDfuncOutput(double[][] input) {
 		for(int i=0; i<input.length; i++) {
 			for(int j=0; j<input[0].length; j++) {
 				double val = input[i][j];
@@ -98,7 +98,7 @@ public class NeuralNet {
 		return input;
 	}
 	
-	private double[][] normalize(double[][] a){
+	public double[][] normalize(double[][] a){
 		int m = a.length;
         int n = a[0].length;
         double[][] c = new double[m][n];
@@ -113,9 +113,9 @@ public class NeuralNet {
 		inputs = normalize(inputs);
 		double[][] targets = Matrix.clsToArray(target_cls);
 		//Compute output
-		double[][] h1outputs = hidden1.computeOutput(inputs);
-		double[][] h2outputs = hidden2.computeOutput(h1outputs);
-		double[][] outOutputs = outputL.computeOutput(h2outputs);
+		double[][] h1outputs = hidden1.computeOutput(inputs, hidden1.getWeights());
+		double[][] h2outputs = hidden2.computeOutput(h1outputs, hidden2.getWeights());
+		double[][] outOutputs = outputL.computeOutput(h2outputs, outputL.getWeights());
 		
 		//Compute error
 		double[][] outErrors = Matrix.subtract(targets, outOutputs);
@@ -176,9 +176,9 @@ public class NeuralNet {
 		inputs = normalize(inputs);
 		//double[][] targets = Matrix.clsToArray(target_cls);
 		//Compute output
-		double[][] h1outputs = hidden1.computeOutput(inputs);
-		double[][] h2outputs = hidden2.computeOutput(h1outputs);
-		double[][] outOutputs = outputL.computeOutput(h2outputs);
+		double[][] h1outputs = hidden1.computeOutput(inputs, hidden1.getWeights());
+		double[][] h2outputs = hidden2.computeOutput(h1outputs, hidden2.getWeights());
+		double[][] outOutputs = outputL.computeOutput(h2outputs, outputL.getWeights());
 		return outOutputs;
 	}
 	
@@ -217,6 +217,7 @@ public class NeuralNet {
 	
 	
 	public static void main(String[] args) throws IOException{
+		
 		double[][] conMatrix = Matrix.generateByNum(10, 10, 0);
 
 		Data data = readCSV();
@@ -225,9 +226,10 @@ public class NeuralNet {
 		
 
 		net.trainMult(net, data, 38000);
-		
+		int counter = 0;
 		for(int i = 38000; i < data.getData().size(); i++){
-			double[][] outOutputs = net.test(data.getData().get(i).getImage(), data.getData().get(i).getCls());	
+			double[][] outOutputs = net.test(data.getData().get(i).getImage(), data.getData().get(i).getCls());
+			counter++;
 			String result="";
 			int gusOutCls=0;
 			double gusOut = outOutputs[0][0];
@@ -242,6 +244,8 @@ public class NeuralNet {
 			conMatrix[data.getData().get(i).getCls()][gusOutCls]++;
 		}
 		
+		
+		double correct = 0;
 		BufferedWriter writer;
         File f = new File("confusionMatrix.csv");
         writer = new BufferedWriter(new FileWriter(f));
@@ -251,10 +255,21 @@ public class NeuralNet {
         	String cm = "";
         	for(int j = 0; j < 10; j++){
         		cm += String.valueOf(conMatrix[i][j]) + ",";
+        		
+        		if(i == j){
+        			correct += conMatrix[i][j];
+        		}
+        		 
         	}
+        	
         	writer.append(cm + "\n");
         }
+        double acc = (correct/counter)*100;
+        writer.append("\n");
+        writer.append("Accuracy in %: "+ acc);
+        System.out.println("Accuracy in %: "+ acc);
 		writer.close();
+	
 	}
 		
 }
